@@ -166,8 +166,8 @@ end
 clear j rh_parcel_data
 Parcels400_7network = [lh_vertex_label_temp'; rh_vertex_label_temp'];
 
-BSR_V_ds(:,1) = full2parcel(BSR_V_full_LV1, Parcels400_Kong2022);
-BSR_V_ds(:,2) = full2parcel(BSR_V_full_LV2, Parcels400_Kong2022);
+BSR_V_ds(:,1) = full2parcel(BSR_V_full_LV1, Parcels400_7network);
+BSR_V_ds(:,2) = full2parcel(BSR_V_full_LV2, Parcels400_7network);
 save BSR_V.txt -ascii BSR_V_ds
 ```
 
