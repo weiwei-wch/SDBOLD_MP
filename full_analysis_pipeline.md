@@ -270,7 +270,7 @@ rotated1 = nulls.burt2020(parc_data[:,0], atlas='fsaverage', density='10k', n_pe
 rotated2 = nulls.burt2020(parc_data[:,1], atlas='fsaverage', density='10k', n_perm=1000, seed=7, parcellation=parc_gifti, n_proc=20)
 
 orig_stdout = sys.stdout
-f = open('result_neurosynth.csv', 'w')
+f = open('result_neurotransmitter.csv', 'w')
 sys.stdout = f
 for i in range(2, parc_data.shape[1]):
  corr1, pval1 = stats.compare_images(parc_data[:,0], parc_data[:,i], nulls=rotated1)
