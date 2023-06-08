@@ -150,8 +150,8 @@ y_Write(BSR_V_LV2(2563:5124, 1),MaskData_rh_gheader,'./rh.LV2.fsaverage4.func.gi
 ```
 
 ## step 3 decoding the disruption pattern
-the gene-PLSC has a fully documented pipeline in https://github.com/SarahMorgan/Morphometric_Similarity_SZ/blob/master/Gene_analyses.md
-the symptom-PLSC can also be conducted 
+the gene-PLSC has a fully documented pipeline in https://github.com/SarahMorgan/Morphometric_Similarity_SZ/blob/master/Gene_analyses.md,
+the symptom-PLSC can also be conducted as gene-PLSC, 
 so here we only show the pipeline of decoding the pattern with neurosynth cognitive terms and neurotransmiiter map (neuromaps)
 
 notice that this pipeline is performed under python
@@ -240,7 +240,7 @@ for keys in data_PET:
 # scale the data
 parc_data = scale_values(parc_data, 0, 100, axis=0)
 ```
-do spin permutation and print the result
+do spin permutation and print the result, the p values need fdr-correction else where (we use mafdr function in matlab)
 
 ```
 # random roatated data for spin permutaion, rotated1 for pattern 1, 2 fro pattern 2
@@ -292,7 +292,7 @@ for i in range(0, len(usable_terms)):
 # scale the data
 parc_data = scale_values(parc_data, 0, 100, axis=0)
 ```
-do spin permutaion and print the result
+do spin permutaion and print the result, the p values need fdr-correction else where (we use mafdr function in matlab)
 
 ```
 orig_stdout = sys.stdout
