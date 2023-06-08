@@ -122,7 +122,7 @@ you need to add path and subpath of mypls toolbox to your matlab path
 ```
 % perform the PLSC and calculate the BSR map
 
-mypls_input;
+myPLS_input;
 res  = myPLS_analysis(input,pls_opts);
 
 % the output will directly show how many latent component (LC) is significant
