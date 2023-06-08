@@ -61,7 +61,7 @@ sd_data_z = [sd_lh_z, sd_rh_z]
 
 ## Step 2: perform the PLSC with myPLS toolbox (https://github.com/MIPLabCH/myPLS)
 the original myPLS toolbox dont support group number higher than 3, so we need to generate the contrast matrix
-as the Y (behavior) input and use the "behavior" type PLSC
+as the Y (behavior) input and use the "behavior" type PLSC, brainspace toolbox is needed for downsampling
 
 first we generate the orthogonal contrast
 
@@ -136,17 +136,39 @@ somthing to do after PLSC
 % save as gifti file for visiualization
 % value of medial wall vertex is 0
 BSR_V_full = [MaskData_lh; MaskData_rh]; 
-BSR_V_full_LV1(BSR_V_full==1) = bootstrap_ratios_reho(:,1); 
-BSR_V_full_LV2(BSR_V_full==1) = bootstrap_ratios_reho(:,2);
-BSR_V_full_LV1(BSR_V_full==1,1) = bootstrap_ratios_reho(:,1);
-BSR_V_full_LV2(BSR_V_full==1,1) = bootstrap_ratios_reho(:,2);
+BSR_V_full_LV1(BSR_V_full==1,1) = BSR_V(:,1);
+BSR_V_full_LV2(BSR_V_full==1,1) = BSR_V(:,2);
 y_Write(BSR_V_LV1(1:2562, 1),MaskData_lh_gheader,'./lh.LV1.fsaverage4.func.gii');
 y_Write(BSR_V_LV1(2563:5124, 1),MaskData_rh_gheader,'./rh.LV1.fsaverage4.func.gii');
 y_Write(BSR_V_LV2(1:2562, 1),MaskData_lh_gheader,'./lh.LV2.fsaverage4.func.gii');
 y_Write(BSR_V_LV2(2563:5124, 1),MaskData_rh_gheader,'./rh.LV2.fsaverage4.func.gii');
 
-% downsmaple the BSR_V map for decoding
+% downsmaple the BSR_V map for decoding, brainspace toolbox is needed
+lh_annot       = strcat('/home/weiw/weiw_data_hdd/for_MPpaper/lh.Schaefer2018_400Parcels_7Networks_order.fsaverage4.annot');
+rh_annot       = strcat('/home/weiw/weiw_data_hdd/for_MPpaper/rh.Schaefer2018_400Parcels_7Networks_order.fsaverage4.annot');
 
+[~, lh_vertex_label, lh_parcel_data] = read_annotation(lh_annot);
+[~, rh_vertex_label, rh_parcel_data] = read_annotation(rh_annot);
+clear lh_annot rh_annot
+
+for j=1:size(lh_parcel_data.table,1)
+    lh_vertex_label_temp(lh_vertex_label==lh_parcel_data.table(j,5)) = j-1;
+end
+clear j lh_parcel_data
+
+for j=1:size(rh_parcel_data.table,1)
+    if j==1
+        rh_vertex_label_temp(rh_vertex_label==rh_parcel_data.table(j,5)) = j-1;
+    else
+        rh_vertex_label_temp(rh_vertex_label==rh_parcel_data.table(j,5)) = j-2+size(rh_parcel_data.table,1);
+    end
+end
+clear j rh_parcel_data
+Parcels400_7network = [lh_vertex_label_temp'; rh_vertex_label_temp'];
+
+BSR_V_ds(:,1) = full2parcel(BSR_V_full_LV1, Parcels400_Kong2022);
+BSR_V_ds(:,2) = full2parcel(BSR_V_full_LV2, Parcels400_Kong2022);
+save BSR_V.txt -ascii BSR_V_ds
 ```
 
 ## step 3 decoding the disruption pattern
