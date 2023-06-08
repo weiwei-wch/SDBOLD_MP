@@ -1,6 +1,9 @@
-This is the analysis code for "Transdiagnostic neural variability deficits in three major psychiatric disorders". 
-The preprocessing of the T1w/rest-fMRI is not shown here, which can be easily done with publicly avilable tool like fMRIprep/nilearn/DPABI. 
-Main contents include calculating SDBOLD, performing 4-group partial least squares correlation (PLSC) (https://github.com/MIPLabCH/myPLS), 
+This is the analysis code for "Transdiagnostic neural variability deficits in three major psychiatric disorders"
+
+The preprocessing of the T1w/rest-fMRI is not shown here, which can be easily done with publicly avilable tool like fMRIprep/nilearn/DPABI
+
+Main contents include calculating SDBOLD, performing 4-group partial least squares correlation (PLSC) (https://github.com/MIPLabCH/myPLS)
+
 then calculating the Bootstraping ratio (BSR) map, and decode the map with neuromaps (https://github.com/netneurolab/neuromaps)
 
 ## Step1: calculating the SDBOLD for each individual
