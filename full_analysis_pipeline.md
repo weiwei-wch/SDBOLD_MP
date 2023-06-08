@@ -120,6 +120,7 @@ sd_data_z_reg  = bsxfun(@plus, Y-X*b_CN, mean_CN);
 clear NV_reg X X_CN Y Y_CN b_CN mean_CN
 ```
 perform the group-PLSC, the mypls_input file is modified to fit the variable name here
+
 you need to add path and subpath of mypls toolbox to your matlab path
 
 ```
@@ -175,8 +176,10 @@ save BSR_V.txt -ascii BSR_V_ds
 ```
 
 ## step 3 decoding the disruption pattern
-the gene-PLSC has a fully documented pipeline in https://github.com/SarahMorgan/Morphometric_Similarity_SZ/blob/master/Gene_analyses.md,
-the symptom-PLSC can also be conducted as gene-PLSC, 
+the gene-PLSC has a fully documented pipeline in https://github.com/SarahMorgan/Morphometric_Similarity_SZ/blob/master/Gene_analyses.md
+
+the symptom-PLSC can also be conducted as gene-PLSC
+
 so here we only show the pipeline of decoding the pattern with neurosynth cognitive terms and neurotransmiiter map (neuromaps)
 
 notice that this pipeline is performed under python
