@@ -6,6 +6,7 @@ then calculating the Bootstraping ratio (BSR) map, and decode the map with neuro
 ## Step1: calculating the SDBOLD for each individual
 This is depending on MATLAB with spm and freesurfer installed
 
+first we load surface and mask file for fsaverage4 we need 
 ```
 %% initializing
 data_dir = 'fMRI_surf/'; % data dir contains all the lh* and rh* fmri files
@@ -20,7 +21,10 @@ MaskData_lh_gheader=gifti('lh.cortex.fsaverage4.func.gii');
 MaskData_rh_gheader=gifti('rh.cortex.fsaverage4.func.gii');
 MaskData_lh=double(logical(MaskData_lh_gheader.cdata)); MaskDataOneDim_lh=reshape(MaskData_lh,1,[]);
 MaskData_rh=double(logical(MaskData_rh_gheader.cdata)); MaskDataOneDim_rh=reshape(MaskData_rh,1,[]);
+```
+then read the data
 
+```
 %% read data and do calculating
 
 for idx = 1:length(lh_data_list)
@@ -59,6 +63,8 @@ sd_data_z = [sd_lh_z, sd_rh_z]
 the original myPLS toolbox dont support group number higher than 3, so we need to generate the contrast matrix
 as the Y (behavior) input and use the "behavior" type PLSC
 
+first we generate the orthogonal contrast
+
 ```
 % generate contrast
 % here 0 for controls, 1 for bipolar manic, 2 for bipolar depression, 3 for schizophrenia, 4 for depression
@@ -85,9 +91,13 @@ contrast(:,3)=orth(contrast(:,3));
 contrast(diagnosis==2,4)=-1/sum(diagnosis==2);
 contrast(diagnosis==4,4)=1/sum(diagnosis==4);
 contrast(:,4)=orth(contrast(:,4));
+```
+then regress out the covariance
 
+```
 % load data of age, gender and EDUY
 % a vector contain one type of data
+
 load demographic_data
 
 % regress effect of demopraphic data
@@ -105,8 +115,13 @@ b_CN = (X_CN'*X_CN + eye(size(X_CN,2))*1e-8)\(X_CN'*Y_CN);
 X = [ones(size(Y,1),1) NV_reg];
 sd_data_z_reg  = bsxfun(@plus, Y-X*b_CN, mean_CN);
 clear NV_reg X X_CN Y Y_CN b_CN mean_CN
+```
+perform the group-PLSC, the mypls_input file is modified to fit the variable name here
+you need to add path and subpath of mypls toolbox to your matlab path
 
+```
 % perform the PLSC and calculate the BSR map
+
 mypls_input;
 res  = myPLS_analysis(input,pls_opts);
 
@@ -114,7 +129,10 @@ res  = myPLS_analysis(input,pls_opts);
 % brain score or latent variable (LV) stores in res.Lx, each coloum is the LV for a LC
 
 BSR_V=res.V./res.boot_results.Vb_std;
+```
+somthing to do after PLSC
 
+```
 % save as gifti file for visiualization
 % value of medial wall vertex is 0
 BSR_V_full = [MaskData_lh; MaskData_rh]; 
@@ -189,7 +207,7 @@ expression.to_csv('/home/weiw/weiw_data_hdd/ABA_Schaefer_7_400_data_fsaverage.cs
 
 Ind=list(expression.index)
 Col=list(expression.columns)
-sio.savemat('/home/weiw/weiw_data_hdd/neuromaps_data/predictor/abagen_expression_400schaefer17_rnaseq.mat', {'data_expression':expression.values, 'index':Ind, 'cols_expression':Col})
+sio.savemat('/home/weiw/weiw_data_hdd/neuromaps_data/predictor/abagen_expression_400schaefer7_rnaseq.mat', {'data_expression':expression.values, 'index':Ind, 'cols_expression':Col})
 ```
 use neuromap to get neurotransmitter maps and parcelate them
 
@@ -197,7 +215,8 @@ use neuromap to get neurotransmitter maps and parcelate them
 # load the BSR_V data from step 2
 parc_data = np.loadtxt('BSR_V.txt')
 
-# fetch the annotation of neurotransmitter, notice parcelation need to be perform in the orginal space (volume or surface) to avoid PVE, detail can be see in issues of neuromaps repo
+# fetch the annotation of neurotransmitter, notice parcelation need to be perform in the orginal space (volume or surface) 
+# to avoid PVE, detail can be see in issues of neuromaps repo
 data_PET = datasets.fetch_annotation(tags='PET')
 for keys in data_PET:
   if 'beliveau2017' in keys:
