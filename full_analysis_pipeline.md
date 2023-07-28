@@ -132,7 +132,7 @@ res  = myPLS_analysis(input,pls_opts);
 % the output will directly show how many latent component (LC) is significant
 % brain score or latent variable (LV) stores in res.Lx, each coloum is the LV for a LC
 
-BSR_V=res.V./res.boot_results.Vb_std;
+BSR_V=res.boot_results.Vb_mean./res.boot_results.Vb_std;
 ```
 somthing to do after PLSC
 
